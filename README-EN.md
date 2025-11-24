@@ -206,7 +206,7 @@ No longer controlled by platform algorithms, TrendRadar reorganizes all trending
 
 ### **Multi-Channel Real-Time Push**
 
-Supports **WeWork** (+ WeChat push solution), **Feishu**, **DingTalk**, **Telegram**, **Email**, **ntfy** — messages delivered directly to phone and email.
+Supports **WeWork** (+ WeChat push solution), **Feishu**, **DingTalk**, **Telegram**, **Discord**, **Email**, **ntfy** — messages delivered directly to phone and email.
 
 ### **Multi-Platform Support**
 - **GitHub Pages**: Auto-generate beautiful web reports, PC/mobile adapted
@@ -867,6 +867,26 @@ frequency_words.txt file added **required word** feature, using + sign
    3. **Configure to GitHub**:
       - `TELEGRAM_BOT_TOKEN`: Fill in Bot Token from step 1
       - `TELEGRAM_CHAT_ID`: Fill in Chat ID from step 2
+   </details>
+
+   <details>
+   <summary> <strong>👉 Click to expand: Discord Bot</strong></summary>
+   <br>
+
+   **GitHub Secret Configuration (⚠️ Name must match exactly):**
+   - **Name**: `DISCORD_BOT_TOKEN`
+   - **Secret (Value)**: Your Discord Bot Token
+
+   - **Name**: `DISCORD_CHANNEL_ID`
+   - **Secret (Value)**: Discord channel ID that receives the messages
+
+   <br>
+
+   **Quick setup steps:**
+
+   1. Create an application in the [Discord Developer Portal](https://discord.com/developers/applications), add a Bot, and click "Reset Token" to copy the token.
+   2. Generate an OAuth2 invite link with "Send Messages" permission, invite the bot to your server, and allow it to access the target channel.
+   3. Enable "Developer Mode" in Discord (Settings → Advanced), right-click the target channel → Copy ID to get `DISCORD_CHANNEL_ID`.
    </details>
 
    <details>

@@ -457,6 +457,10 @@ class DataService:
                 push_config["enabled_channels"].append("dingtalk")
             if webhooks.get("wework_url"):
                 push_config["enabled_channels"].append("wework")
+            if webhooks.get("telegram_bot_token") and webhooks.get("telegram_chat_id"):
+                push_config["enabled_channels"].append("telegram")
+            if webhooks.get("discord_bot_token") and webhooks.get("discord_channel_id"):
+                push_config["enabled_channels"].append("discord")
 
         if section == "all" or section == "keywords":
             keywords_config = {

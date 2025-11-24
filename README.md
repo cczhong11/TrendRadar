@@ -269,7 +269,7 @@
 
 ### **多渠道实时推送**
 
-支持**企业微信**(+ 微信推送方案)、**飞书**、**钉钉**、**Telegram**、**邮件**、**ntfy**，消息直达手机和邮箱
+支持**企业微信**(+ 微信推送方案)、**飞书**、**钉钉**、**Telegram**、**Discord**、**邮件**、**ntfy**，消息直达手机和邮箱
 
 ### **多端适配**
 - **GitHub Pages**：自动生成精美网页报告，PC/移动端适配
@@ -917,6 +917,26 @@ frequency_words.txt 文件增加了一个【必须词】功能，使用 + 号
    3. **配置到 GitHub**：
       - `TELEGRAM_BOT_TOKEN`：填入第 1 步获得的 Bot Token
       - `TELEGRAM_CHAT_ID`：填入第 2 步获得的 Chat ID
+   </details>
+
+   <details>
+   <summary>👉 点击展开：<strong>Discord Bot</strong></summary>
+   <br>
+
+   **GitHub Secret 配置（⚠️ Name 名称必须严格一致）：**
+   - **Name（名称）**：`DISCORD_BOT_TOKEN`
+   - **Secret（值）**：你的 Discord Bot Token
+
+   - **Name（名称）**：`DISCORD_CHANNEL_ID`
+   - **Secret（值）**：要推送的 Discord 频道 ID
+
+   <br>
+
+   **快速获取方法：**
+
+   1. 在 [Discord Developer Portal](https://discord.com/developers/applications) 创建应用 → 添加 Bot，点击 "Reset Token" 复制 Token。
+   2. 在 OAuth2 中为 Bot 生成邀请链接（确保授予发送消息权限），将 Bot 加入你的服务器并允许访问目标频道。
+   3. 在 Discord 客户端开启“开发者模式”（设置 → 高级），右键目标频道 → 复制 ID，得到 `DISCORD_CHANNEL_ID`。
    </details>
 
    <details>

@@ -166,6 +166,12 @@ def load_config():
     config["TELEGRAM_CHAT_ID"] = os.environ.get(
         "TELEGRAM_CHAT_ID", ""
     ).strip() or webhooks.get("telegram_chat_id", "")
+    config["DISCORD_BOT_TOKEN"] = os.environ.get(
+        "DISCORD_BOT_TOKEN", ""
+    ).strip() or webhooks.get("discord_bot_token", "")
+    config["DISCORD_CHANNEL_ID"] = os.environ.get(
+        "DISCORD_CHANNEL_ID", ""
+    ).strip() or webhooks.get("discord_channel_id", "")
 
     # 邮件配置
     config["EMAIL_FROM"] = os.environ.get("EMAIL_FROM", "").strip() or webhooks.get(
@@ -219,6 +225,14 @@ def load_config():
         )
         chat_source = "环境变量" if os.environ.get("TELEGRAM_CHAT_ID") else "配置文件"
         notification_sources.append(f"Telegram({token_source}/{chat_source})")
+    if config["DISCORD_BOT_TOKEN"] and config["DISCORD_CHANNEL_ID"]:
+        token_source = (
+            "环境变量" if os.environ.get("DISCORD_BOT_TOKEN") else "配置文件"
+        )
+        channel_source = (
+            "环境变量" if os.environ.get("DISCORD_CHANNEL_ID") else "配置文件"
+        )
+        notification_sources.append(f"Discord({token_source}/{channel_source})")
     if config["EMAIL_FROM"] and config["EMAIL_PASSWORD"] and config["EMAIL_TO"]:
         from_source = "环境变量" if os.environ.get("EMAIL_FROM") else "配置文件"
         notification_sources.append(f"邮件({from_source})")
@@ -1566,6 +1580,28 @@ def format_title_for_platform(
 
         return result
 
+    elif platform == "discord":
+        if link_url:
+            formatted_title = f"[{cleaned_title}]({link_url})"
+        else:
+            formatted_title = cleaned_title
+
+        title_prefix = "🆕 " if title_data.get("is_new") else ""
+
+        if show_source:
+            result = f"[{title_data['source_name']}] {title_prefix}{formatted_title}"
+        else:
+            result = f"{title_prefix}{formatted_title}"
+
+        if rank_display:
+            result += f" {rank_display}"
+        if title_data["time_display"]:
+            result += f" `{title_data['time_display']}`"
+        if title_data["count"] > 1:
+            result += f" ({title_data['count']}次)"
+
+        return result
+
     elif platform == "wework":
         if link_url:
             formatted_title = f"[{cleaned_title}]({link_url})"
@@ -2907,6 +2943,8 @@ def split_content_into_batches(
     if max_bytes is None:
         if format_type == "dingtalk":
             max_bytes = CONFIG.get("DINGTALK_BATCH_SIZE", 20000)
+        elif format_type == "discord":
+            max_bytes = 1800
         elif format_type == "feishu":
             max_bytes = CONFIG.get("FEISHU_BATCH_SIZE", 29000)
         elif format_type == "ntfy":
@@ -2930,7 +2968,7 @@ def split_content_into_batches(
         base_header = f"**总新闻数：** {total_titles}\n\n"
     elif format_type == "feishu":
         base_header = ""
-    elif format_type == "dingtalk":
+    elif format_type in ("dingtalk", "discord"):
         base_header = f"**总新闻数：** {total_titles}\n\n"
         base_header += f"**时间：** {now.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
         base_header += f"**类型：** 热点分析报告\n\n"
@@ -2953,7 +2991,7 @@ def split_content_into_batches(
         base_footer = f"\n\n<font color='grey'>更新时间：{now.strftime('%Y-%m-%d %H:%M:%S')}</font>"
         if update_info:
             base_footer += f"\n<font color='grey'>TrendRadar 发现新版本 {update_info['remote_version']}，当前 {update_info['current_version']}</font>"
-    elif format_type == "dingtalk":
+    elif format_type in ("dingtalk", "discord"):
         base_footer = f"\n\n> 更新时间：{now.strftime('%Y-%m-%d %H:%M:%S')}"
         if update_info:
             base_footer += f"\n> TrendRadar 发现新版本 **{update_info['remote_version']}**，当前 **{update_info['current_version']}**"
@@ -2968,7 +3006,7 @@ def split_content_into_batches(
             stats_header = f"📊 **热点词汇统计**\n\n"
         elif format_type == "feishu":
             stats_header = f"📊 **热点词汇统计**\n\n"
-        elif format_type == "dingtalk":
+        elif format_type in ("dingtalk", "discord"):
             stats_header = f"📊 **热点词汇统计**\n\n"
 
     current_batch = base_header
@@ -3052,7 +3090,7 @@ def split_content_into_batches(
                     word_header = f"📈 <font color='grey'>{sequence_display}</font> **{word}** : <font color='orange'>{count}</font> 条\n\n"
                 else:
                     word_header = f"📌 <font color='grey'>{sequence_display}</font> **{word}** : {count} 条\n\n"
-            elif format_type == "dingtalk":
+            elif format_type in ("dingtalk", "discord"):
                 if count >= 10:
                     word_header = (
                         f"🔥 {sequence_display} **{word}** : **{count}** 条\n\n"
@@ -3084,9 +3122,11 @@ def split_content_into_batches(
                     formatted_title = format_title_for_platform(
                         "feishu", first_title_data, show_source=True
                     )
-                elif format_type == "dingtalk":
+                elif format_type in ("dingtalk", "discord"):
                     formatted_title = format_title_for_platform(
-                        "dingtalk", first_title_data, show_source=True
+                        "discord" if format_type == "discord" else "dingtalk",
+                        first_title_data,
+                        show_source=True,
                     )
                 else:
                     formatted_title = f"{first_title_data['title']}"
@@ -3133,9 +3173,11 @@ def split_content_into_batches(
                     formatted_title = format_title_for_platform(
                         "feishu", title_data, show_source=True
                     )
-                elif format_type == "dingtalk":
+                elif format_type in ("dingtalk", "discord"):
                     formatted_title = format_title_for_platform(
-                        "dingtalk", title_data, show_source=True
+                        "discord" if format_type == "discord" else "dingtalk",
+                        title_data,
+                        show_source=True,
                     )
                 else:
                     formatted_title = f"{title_data['title']}"
@@ -3168,7 +3210,7 @@ def split_content_into_batches(
                     separator = f"\n\n"
                 elif format_type == "feishu":
                     separator = f"\n{CONFIG['FEISHU_MESSAGE_SEPARATOR']}\n\n"
-                elif format_type == "dingtalk":
+                elif format_type in ("dingtalk", "discord"):
                     separator = f"\n---\n\n"
 
                 test_content = current_batch + separator
@@ -3191,7 +3233,7 @@ def split_content_into_batches(
             new_header = f"\n\n🆕 **本次新增热点新闻** (共 {report_data['total_new_count']} 条)\n\n"
         elif format_type == "feishu":
             new_header = f"\n{CONFIG['FEISHU_MESSAGE_SEPARATOR']}\n\n🆕 **本次新增热点新闻** (共 {report_data['total_new_count']} 条)\n\n"
-        elif format_type == "dingtalk":
+        elif format_type in ("dingtalk", "discord"):
             new_header = f"\n---\n\n🆕 **本次新增热点新闻** (共 {report_data['total_new_count']} 条)\n\n"
 
         test_content = current_batch + new_header
@@ -3218,7 +3260,7 @@ def split_content_into_batches(
                 source_header = f"**{source_data['source_name']}** ({len(source_data['titles'])} 条):\n\n"
             elif format_type == "feishu":
                 source_header = f"**{source_data['source_name']}** ({len(source_data['titles'])} 条):\n\n"
-            elif format_type == "dingtalk":
+            elif format_type in ("dingtalk", "discord"):
                 source_header = f"**{source_data['source_name']}** ({len(source_data['titles'])} 条):\n\n"
 
             # 构建第一条新增新闻
@@ -3240,9 +3282,11 @@ def split_content_into_batches(
                     formatted_title = format_title_for_platform(
                         "feishu", title_data_copy, show_source=False
                     )
-                elif format_type == "dingtalk":
+                elif format_type in ("dingtalk", "discord"):
                     formatted_title = format_title_for_platform(
-                        "dingtalk", title_data_copy, show_source=False
+                        "discord" if format_type == "discord" else "dingtalk",
+                        title_data_copy,
+                        show_source=False,
                     )
                 else:
                     formatted_title = f"{title_data_copy['title']}"
@@ -3285,9 +3329,11 @@ def split_content_into_batches(
                     formatted_title = format_title_for_platform(
                         "feishu", title_data_copy, show_source=False
                     )
-                elif format_type == "dingtalk":
+                elif format_type in ("dingtalk", "discord"):
                     formatted_title = format_title_for_platform(
-                        "dingtalk", title_data_copy, show_source=False
+                        "discord" if format_type == "discord" else "dingtalk",
+                        title_data_copy,
+                        show_source=False,
                     )
                 else:
                     formatted_title = f"{title_data_copy['title']}"
@@ -3319,7 +3365,7 @@ def split_content_into_batches(
             failed_header = f"\n\n⚠️ **数据获取失败的平台：**\n\n"
         elif format_type == "feishu":
             failed_header = f"\n{CONFIG['FEISHU_MESSAGE_SEPARATOR']}\n\n⚠️ **数据获取失败的平台：**\n\n"
-        elif format_type == "dingtalk":
+        elif format_type in ("dingtalk", "discord"):
             failed_header = f"\n---\n\n⚠️ **数据获取失败的平台：**\n\n"
 
         test_content = current_batch + failed_header
@@ -3338,7 +3384,7 @@ def split_content_into_batches(
         for i, id_value in enumerate(report_data["failed_ids"], 1):
             if format_type == "feishu":
                 failed_line = f"  • <font color='red'>{id_value}</font>\n"
-            elif format_type == "dingtalk":
+            elif format_type in ("dingtalk", "discord"):
                 failed_line = f"  • **{id_value}**\n"
             else:
                 failed_line = f"  • {id_value}\n"
@@ -3403,6 +3449,8 @@ def send_to_notifications(
     wework_url = CONFIG["WEWORK_WEBHOOK_URL"]
     telegram_token = CONFIG["TELEGRAM_BOT_TOKEN"]
     telegram_chat_id = CONFIG["TELEGRAM_CHAT_ID"]
+    discord_bot_token = CONFIG["DISCORD_BOT_TOKEN"]
+    discord_channel_id = CONFIG["DISCORD_CHANNEL_ID"]
     email_from = CONFIG["EMAIL_FROM"]
     email_password = CONFIG["EMAIL_PASSWORD"]
     email_to = CONFIG["EMAIL_TO"]
@@ -3438,6 +3486,18 @@ def send_to_notifications(
         results["telegram"] = send_to_telegram(
             telegram_token,
             telegram_chat_id,
+            report_data,
+            report_type,
+            update_info_to_send,
+            proxy_url,
+            mode,
+        )
+
+    # 发送到 Discord
+    if discord_bot_token and discord_channel_id:
+        results["discord"] = send_to_discord(
+            discord_bot_token,
+            discord_channel_id,
             report_data,
             report_type,
             update_info_to_send,
@@ -3862,6 +3922,72 @@ def send_to_telegram(
             return False
 
     print(f"Telegram所有 {len(batches)} 批次发送完成 [{report_type}]")
+    return True
+
+
+def send_to_discord(
+    bot_token: str,
+    channel_id: str,
+    report_data: Dict,
+    report_type: str,
+    update_info: Optional[Dict] = None,
+    proxy_url: Optional[str] = None,
+    mode: str = "daily",
+) -> bool:
+    """发送到Discord（支持分批发送，自动规避2000字符限制）"""
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bot {bot_token}",
+    }
+    url = f"https://discord.com/api/v10/channels/{channel_id}/messages"
+
+    proxies = None
+    if proxy_url:
+        proxies = {"http": proxy_url, "https": proxy_url}
+
+    batches = split_content_into_batches(
+        report_data, "discord", update_info, max_bytes=1800, mode=mode
+    )
+
+    print(f"Discord消息分为 {len(batches)} 批次发送 [{report_type}]")
+
+    for i, batch_content in enumerate(batches, 1):
+        if len(batches) > 1:
+            batch_header = f"[第 {i}/{len(batches)} 批次]\n\n"
+            batch_content = batch_header + batch_content
+
+        batch_size = len(batch_content.encode("utf-8"))
+        print(
+            f"发送Discord第 {i}/{len(batches)} 批次，大小：{batch_size} 字节 [{report_type}]"
+        )
+
+        payload = {"content": batch_content, "allowed_mentions": {"parse": []}}
+
+        try:
+            response = requests.post(
+                url, headers=headers, json=payload, proxies=proxies, timeout=30
+            )
+
+            if response.status_code in (200, 201):
+                print(f"Discord第 {i}/{len(batches)} 批次发送成功 [{report_type}]")
+                if i < len(batches):
+                    time.sleep(CONFIG["BATCH_SEND_INTERVAL"])
+            else:
+                error_msg = ""
+                try:
+                    error_msg = response.json().get("message", "")
+                except Exception:
+                    error_msg = response.text
+
+                print(
+                    f"Discord第 {i}/{len(batches)} 批次发送失败 [{report_type}]，状态码：{response.status_code}，错误：{error_msg}"
+                )
+                return False
+        except Exception as e:
+            print(f"Discord第 {i}/{len(batches)} 批次发送出错 [{report_type}]：{e}")
+            return False
+
+    print(f"Discord所有 {len(batches)} 批次发送完成 [{report_type}]")
     return True
 
 
