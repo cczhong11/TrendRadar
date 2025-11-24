@@ -1,113 +1,102 @@
-胖东来
-于东来
+artificial-intelligence-scriptwriting
+AI story ideation
+script-to-screen automation
+AI storyboard generation
+virtual pre-visualisation
+AI shot planning
+camera angle synthesis
+text-to-video generation
+AI scene composition
+synthetic actor creation
+AI voice-synthesis narration
+AI audio mixing
+automated Foley generation
+machine-learning footage editing
+AI colour-grading
+AI visual effects pipeline
+generative video transitions
+AI asset management
+automated production scheduling
+AI budget optimisation
+data-driven casting decisions
+AI virtual production environment
+motion-capture with AI
+AI character animation
+AI lip-sync technology
+AI background generation
+AI set extension
+AI compositing automation
+AI sound-design intelligence
+AI music composition for film
+AI audience-predictive analytics
+AI script-emotion analysis
+AI continuity checking
+AI shot-list generation
+real-time AI feedback on takes
+AI language translation & dubbing
+AI challenge detection (e.g., out-of-frame, flicker)
+AI resource allocation for render farms
+AI generator for trailers
+AI metadata tagging for film assets
+AI archive search for B-roll & inserts
+AI dynamic lighting simulation
+AI facial-expression capture and mapping
+AI virtual cinematography
+AI scene-transition timing optimisation
+AI risk-assessment in production (weather, etc)
+AI post-production quality control
+AI colour-palette harmonisation
+AI virtual location scouting
+AI crowd-simulation with AI
 
-DeepSeek
-梁文锋
+AI 电影
 
-华为
-鸿蒙
-HarmonyOS
-任正非
-
-比亚迪
-王传福
-
-大疆
-DJI
-
-宇树
-王兴兴
-
-智元
-灵犀
-稚晖君
-彭志辉
-
-黑神话
-冯骥
-
-影之刃零
-梁其伟
-
-哪吒
-饺子
-杨宇
-!车
-!餐
-
-三体
-流浪地球
-刘慈欣
-郭帆
-
-申奥
-
-京东
-刘强东
-
-字节
-bytedance
-张一鸣
-
-特斯拉
-马斯克
-
-微软
-Microsoft
-
-英伟达
-NVIDIA
-黄仁勋
-
-AMD
-
-谷歌
-google
-gemini
-deepmind
-
-chatgpt
-openai
-sora
-
-claude
-Anthropic
-
-iphone
-ipad
-mac
-ios
-
-ai
-!gai
-人工智能
-
-自动驾驶
-
-机器人
-
-国产
-中国
-
-美国
-日本
-韩国
-
-芯片
-光刻机
-
-科技
-
-核能
-
-水电站
-雅鲁藏布江
-
-新质生产力
-
-月球
-登月
-火星
-宇宙
-飞船
-航空
+	阿里云 Wan2.2-S2V
+百度 MuseSteamer
+剪映（CapCut）
+MiniMax Hailuo Video
+Pippit AI 视频生成
+Kling AI
+AI 视频生成平台 中文
+文字转视频工具 中国
+AI电影制作工具 中国
+中国 AI 影像生成公司
+中文 AI 视频创作平台
+中文 AI 电影／短片生成工具
+国内 AI 视频编辑工具
+虚拟拍摄 AI 技术 中国
+AI 影视特效生成 中国公司
+AI剧本转影像工具
+AI 视频合成／后期平台 中国
+多模态 AI 生成器（视频／音频） 中国
+影音 AI 自动生成工具 中文
+中国 AI 导演助手工具
+中文语音克隆＋视频 AI 平台
+虚拟角色生成 AI 中国
+中国 AI 画面生成＋视频应用
+AI 电影制作流程自动化工具 中国
+AI虚拟场景生成工具 中文
+AI 电影剧本辅助撰写工具 中国
+AI 视频剪辑助手工具 国内
+中文 AI 声音合成＋影片工具
+中国 AI 影视片段自动生成 平台
+中文 AI 动画／电影生成平台
+中文 AI 影像生成＋配音工具
+国内 AI 电影特效自动化平台
+中文 AI 视频生成SDK／API
+中国 AI 影视制作服务公司
+中文 AI 视频制作云平台
+中国 AI 影像创作工具公司
+中文 AI 视频合成工具集
+AI 虚拟拍摄／虚拟制作基地中国
+中文 AI 影片生成模型
+中国 AI 视频生成研究成果／工具
+中文 AI 影像＋动画生成平台
+国内 AI 电影创作辅助工具
+中文 AI 电影制作软件
+中国 AI 影像设计＋生成公司
+国内 多模态 AI（图像＋音频＋文本）电影生成
+中文 AI 影视内容生成平台
+AI 视频资源库＋生成工具（中国版）
+国内 AI 影视流程优化工具
+中文 AI 视频制作插件／工具
